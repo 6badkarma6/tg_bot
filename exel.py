@@ -51,12 +51,13 @@ def message_dt(gr: str, load_file: str, file: str = 'data.json') -> list:
 def src():
     import os
     os.system("curl -o page_source.html https://vgke.by/raspisanie-zanjatij/")
+    return True
 
 
 def pr():
     from bs4 import BeautifulSoup
     import json
-    with open("page_source.html") as html:
+    with open(file='page_source.html', mode='r', encoding='utf-8') as html:
         print('pr start')
         soup = BeautifulSoup(html, 'html.parser')
         data = []
@@ -169,6 +170,10 @@ def data_conf():
         json.dump({'ПО-1': {'x': po_x, 'y': po_y},
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
+
 # if __name__ == "__main__":
+    # data = ajson()
+    # print(nn(message_dt(gr='ПО-1', load_file=data['sso'])))
 #    pr()
 #    save()
+#    data_conf()
