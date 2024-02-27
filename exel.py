@@ -4,11 +4,14 @@ def rw(gr: str):
 
 
 def nn(lists: list) -> list:
-    for j in lists:
-        for k in j:
-            if k == 'None' and j.index(k) != 4:
-                print(j)
-                lists[lists.index(j)][j.index(k)] = lists[lists.index(j) - 1][j.index(k)]
+    for j in range(len(lists)):
+        for k in range(len(lists[j])):
+            if lists[j][k] == 'None' and j != 3:
+                lists[j][k] = lists[j-1][k]
+    for j in range(len(lists)):
+        for k in range(len(lists[j])):
+            if lists[j][k] == 'None':
+                lists[j][k] = '     '
     return lists
 
 
@@ -166,9 +169,7 @@ def data_conf():
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 
-# if __name__ == "__main__":
-    # data = ajson()
-    # print(nn(message_dt(gr='ПО-1', load_file=data['sso'])))
-#    pr()
-#    save()
-#    data_conf()
+if __name__ == "__main__":
+    data = ajson()
+    for i in nn(message_dt(gr='ПО-1', load_file=data['sso'])):
+        print(i)
