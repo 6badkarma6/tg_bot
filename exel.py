@@ -17,8 +17,8 @@ def nn(lists: list) -> list:
 
 def message(data: list) -> str:
     ms = ''
-    for i in data:
-        for w in i:
+    for j in data:
+        for w in j:
             ms = ms + w
     return ms
 
@@ -64,8 +64,8 @@ def pr():
         name = []
         for link in soup.find_all('iframe'):
             data.append(link.get('src'))
-        for i in range(len(data)):
-            ds = i
+        for j in range(len(data)):
+            ds = j
             http.append(data[ds][51:])
             if data[ds][-17] == '/':
                 name.append(data[ds][-16:])
@@ -110,15 +110,15 @@ def sort(file: str):
     file = openpyxl.load_workbook(file)
     open_file = file.active
     sn = {}
-    i = 2
+    j = 2
     while True:
         r = 5
-        r += i
+        r += j
         if open_file.cell(row=r, column=3).value == ' ':
-            i += 1
-            sn['y'] = i
+            j += 1
+            sn['y'] = j
             break
-        i += 2
+        j += 2
     o = 1
     while True:
         ln = 3
@@ -128,12 +128,12 @@ def sort(file: str):
             sn['x'] = o
             break
         o += 1
-    for i in range(1, open_file.max_row):
-        for j in range(1, open_file.max_column):
-            if open_file.cell(row=i, column=j).value == 'ПО-1':
+    for j in range(1, open_file.max_row):
+        for k in range(1, open_file.max_column):
+            if open_file.cell(row=j, column=k).value == 'ПО-1':
                 sn['po-r'] = [4, i]
                 sn['po-a'] = [3, j]
-            if open_file.cell(row=i, column=j).value == 'ЭС-2':
+            if open_file.cell(row=j, column=k).value == 'ЭС-2':
                 sn['es-r'] = [4, i]
                 sn['es-a'] = [3, j]
     return sn
@@ -144,7 +144,7 @@ def ls(a: int, r: int, x: int = 3, y: int = 7) -> tuple[list[str], list[str]]:
            'V', 'W', 'X', 'Y', 'Z']
     row = []
     column = []
-    for i in range(0, x):
+    for n in range(0, x):
         k = abc[a]
         column.append(f'{k}')
         a += 1
