@@ -32,13 +32,9 @@ def message_dt(gr: str, load_file: str, file: str = 'data.json') -> list:
         dt = []
         for x in xd:
             if str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]:
-                # and x != data[gr]['x'][3] and y != data[gr]['y'][3]:
                 dt.append(str(sh[f'{x}{y}'].value))
-                # dt.append('     ')
             elif str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]:
-                # and x != data[gr]['x'][4] and y != data[gr]['y'][3]:
                 dt.append(str(sh[f'{x}{y}'].value))
-                # dt.append('     ')
             elif str(sh[f'{x}{y}'].value) == 'None':
                 dt.append('     ')
             else:
@@ -95,7 +91,6 @@ def save(pb=False):
         print('pr True')
     print('start...')
     data = ajson()
-    # os.system('cd /mnt/d/Tg/download')
     os.system("curl -O " + data['http_sso'])
     print('...finish')
 
