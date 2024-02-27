@@ -1,4 +1,3 @@
-
 def rw(gr: str):
     data = ajson()
     return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
@@ -12,7 +11,7 @@ def nn(lists: list) -> list:
         for k in j:
             if k == 'None' and j.index(k) != 4:
                 print(j)
-                lists[lists.index(j)][j.index(k)] = lists[lists.index(j)-1][j.index(k)]
+                lists[lists.index(j)][j.index(k)] = lists[lists.index(j) - 1][j.index(k)]
     return lists
 
 
@@ -35,10 +34,12 @@ def message_dt(gr: str, load_file: str, file: str = 'data.json') -> list:
     for y in yd:
         dt = []
         for x in xd:
-            if str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]: #  and x != data[gr]['x'][3] and y != data[gr]['y'][3]:
+            if str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]:
+                # and x != data[gr]['x'][3] and y != data[gr]['y'][3]:
                 dt.append(str(sh[f'{x}{y}'].value))
                 # dt.append('     ')
-            elif str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]: # and x != data[gr]['x'][4] and y != data[gr]['y'][3]:
+            elif str(sh[f'{x}{y}'].value) == 'None' and x != data[gr]['x'][0] and y != data[gr]['y'][0]:
+                # and x != data[gr]['x'][4] and y != data[gr]['y'][3]:
                 dt.append(str(sh[f'{x}{y}'].value))
                 # dt.append('     ')
             elif str(sh[f'{x}{y}'].value) == 'None':
@@ -65,7 +66,7 @@ def pr():
         http = []
         name = []
         for link in soup.find_all('iframe'):
-             data.append(link.get('src'))
+            data.append(link.get('src'))
         for i in range(len(data)):
             ds = i
             http.append(data[ds][51:])
@@ -109,69 +110,68 @@ def ajson(file: str = 'conf.json'):
 
 
 def sort(file: str):
-	import openpyxl
-	file = openpyxl.load_workbook(file)
-	open_file = file.active
-	sn = {}
-	i = 2
-	while True:
-		r = 5
-		r += i
-		if open_file.cell(row=r, column=3).value ==' ':
-			i += 1
-			sn['y'] = i
-			break
-		i += 2
-	o = 1
-	while True:
-		l = 3
-		l += o
-		if open_file.cell(row=4, column=l).value != 'None':
-			o += 1
-			sn['x'] = o
-			break
-		o += 1
-	for i in range(1,open_file.max_row):
-		for j in range(1,open_file.max_column):
-			if open_file.cell(row=i, column=j).value == 'ПО-1':
-				sn['po-r'] = [4, i]
-				sn['po-a'] = [3, j]
-			if open_file.cell(row=i, column=j).value == 'ЭС-2':
-				sn['es-r'] = [4, i]
-				sn['es-a'] = [3, j]
-	return sn
+    import openpyxl
+    file = openpyxl.load_workbook(file)
+    open_file = file.active
+    sn = {}
+    i = 2
+    while True:
+        r = 5
+        r += i
+        if open_file.cell(row=r, column=3).value == ' ':
+            i += 1
+            sn['y'] = i
+            break
+        i += 2
+    o = 1
+    while True:
+        l = 3
+        l += o
+        if open_file.cell(row=4, column=l).value != 'None':
+            o += 1
+            sn['x'] = o
+            break
+        o += 1
+    for i in range(1, open_file.max_row):
+        for j in range(1, open_file.max_column):
+            if open_file.cell(row=i, column=j).value == 'ПО-1':
+                sn['po-r'] = [4, i]
+                sn['po-a'] = [3, j]
+            if open_file.cell(row=i, column=j).value == 'ЭС-2':
+                sn['es-r'] = [4, i]
+                sn['es-a'] = [3, j]
+    return sn
 
 
-def ls(a: int, r: int, x: int = 3, y: int = 7) -> list:
-	abc = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-	row = []
-	column = []
-	for i in range(0,x):
-		k = abc[a]
-		column.append(f'{k}')
-		a += 1
-	for j in range(0,y):
-		row.append(f'{r}')
-		r += 1
-	return column, row
+def ls(a: int, r: int, x: int = 3, y: int = 7) -> tuple[list[str], list[str]]:
+    abc = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+           'V', 'W', 'X', 'Y', 'Z']
+    row = []
+    column = []
+    for i in range(0, x):
+        k = abc[a]
+        column.append(f'{k}')
+        a += 1
+    for j in range(0, y):
+        row.append(f'{r}')
+        r += 1
+    return column, row
 
 
 def data_conf():
-	with open('data.json', 'w') as file:
-		import json
-		data = ajson()
-		sn = sort(data['sso'])
-		po_x, trash = ls(sn['po-a'][0], sn['po-r'][0], y=sn['y'], x=sn['x'])
-		po_z, po_y = ls(sn['po-a'][1], sn['po-r'][1], y=sn['y'])
-		po_x = po_x + po_z
-		es_x, trash = ls(sn['es-a'][0], sn['es-r'][0], y=sn['y'], x=sn['x'])
-		es_z, es_y = ls(sn['es-a'][1], sn['es-r'][1], y=sn['y'])
-		es_x = es_x + es_z
-		json.dump({'ПО-1': {'x': po_x, 'y': po_y},
-			   'ЭС-2': {'x': es_x, 'y': es_y}}, file)
+    with open('data.json', 'w') as file:
+        import json
+        data = ajson()
+        sn = sort(data['sso'])
+        po_x, trash = ls(sn['po-a'][0], sn['po-r'][0], y=sn['y'], x=sn['x'])
+        po_z, po_y = ls(sn['po-a'][1], sn['po-r'][1], y=sn['y'])
+        po_x = po_x + po_z
+        es_x, trash = ls(sn['es-a'][0], sn['es-r'][0], y=sn['y'], x=sn['x'])
+        es_z, es_y = ls(sn['es-a'][1], sn['es-r'][1], y=sn['y'])
+        es_x = es_x + es_z
+        json.dump({'ПО-1': {'x': po_x, 'y': po_y},
+                   'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 # if __name__ == "__main__":
 #    pr()
 #    save()
-
-
