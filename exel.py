@@ -4,10 +4,7 @@ def rw(gr: str):
 
 
 def nn(lists: list) -> list:
-    l = 0
     for j in lists:
-        l += 1
-        n = 0
         for k in j:
             if k == 'None' and j.index(k) != 4:
                 print(j)
@@ -125,9 +122,9 @@ def sort(file: str):
         i += 2
     o = 1
     while True:
-        l = 3
-        l += o
-        if open_file.cell(row=4, column=l).value != 'None':
+        ln = 3
+        ln += o
+        if open_file.cell(row=4, column=ln).value != 'None':
             o += 1
             sn['x'] = o
             break
