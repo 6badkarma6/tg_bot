@@ -1,4 +1,4 @@
-def rw(gr: str, local:str = 'local'):
+def rw(gr: str, local: str = 'local'):
     if local == 'local':
         data = ajson(file='data-tw.json')
         return message(data[gr])
@@ -135,11 +135,11 @@ def sort(file: str):
     for j in range(1, open_file.max_row):
         for k in range(1, open_file.max_column):
             if open_file.cell(row=j, column=k).value == 'ПО-1':
-                sn['po-r'] = [4, i]
-                sn['po-a'] = [3, j]
+                sn['po-r'] = [4, j]
+                sn['po-c'] = [3, k]
             if open_file.cell(row=j, column=k).value == 'ЭС-2':
-                sn['es-r'] = [4, i]
-                sn['es-a'] = [3, j]
+                sn['es-r'] = [4, j]
+                sn['es-c'] = [3, k]
     return sn
 
 
@@ -163,17 +163,17 @@ def data_conf():
         import json
         data = ajson()
         sn = sort(data['sso'])
-        po_x, trash = ls(sn['po-a'][0], sn['po-r'][0], y=sn['y'], x=sn['x'])
-        po_z, po_y = ls(sn['po-a'][1], sn['po-r'][1], y=sn['y'])
+        po_x, trash = ls(sn['po-c'][0], sn['po-r'][0], y=sn['y'], x=sn['x'])
+        po_z, po_y = ls(sn['po-c'][1], sn['po-r'][1], y=sn['y'])
         po_x = po_x + po_z
-        es_x, trash = ls(sn['es-a'][0], sn['es-r'][0], y=sn['y'], x=sn['x'])
-        es_z, es_y = ls(sn['es-a'][1], sn['es-r'][1], y=sn['y'])
+        es_x, trash = ls(sn['es-c'][0], sn['es-r'][0], y=sn['y'], x=sn['x'])
+        es_z, es_y = ls(sn['es-c'][1], sn['es-r'][1], y=sn['y'])
         es_x = es_x + es_z
         json.dump({'ПО-1': {'x': po_x, 'y': po_y},
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 #    data = ajson()
 #    for i in nn(message_dt(gr='ПО-1', load_file=data['sso'])):
 #        print(i)
