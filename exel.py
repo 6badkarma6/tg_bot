@@ -1,8 +1,8 @@
-def rw(gr: str, local: str = 'local'):
-    if local == 'local':
-        data = ajson(file='data-tw.json')
-        return message(data[gr])
-    else:
+def rw(gr: str):
+    #if local == 'local':
+    #    data = ajson(file='data-tw.json')
+    #    return message(data[gr])
+    #else:
         data = ajson()
         return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
 
@@ -114,15 +114,15 @@ def sort(file: str):
     file = openpyxl.load_workbook(file)
     open_file = file.active
     sn = {}
-    j = 2
+    j = 0
     while range(100000):
-        r = 5
+        r = 4
         r += j
         if open_file.cell(row=r, column=3).value == '' or open_file.cell(row=r, column=3).value == ' ':
             j += 1
             sn['y'] = j
             break
-        j += 2
+        j += 1
     o = 1
     while range(10000):
         ln = 3
