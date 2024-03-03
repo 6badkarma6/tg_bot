@@ -1,3 +1,4 @@
+#!/usr/bin
 import telebot
 from telebot import types
 
@@ -45,4 +46,4 @@ def gr2(message):
     bot.send_message(message.from_user.id, rw(gr='ЭС-2'))
 
 
-bot.polling(none_stop=True)
+bot.polling(none_stop=True, timeout=10000)

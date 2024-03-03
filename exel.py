@@ -1,6 +1,10 @@
-def rw(gr: str):
-    data = ajson()
-    return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
+def rw(gr: str, local:str = 'local'):
+    if local == 'local':
+        data = ajson(file='data-tw.json')
+        return message(data[gr])
+    else:
+        data = ajson()
+        return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
 
 
 def nn(lists: list) -> list:
@@ -169,7 +173,7 @@ def data_conf():
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 
-if __name__ == "__main__":
-    data = ajson()
-    for i in nn(message_dt(gr='ПО-1', load_file=data['sso'])):
-        print(i)
+#if __name__ == "__main__":
+#    data = ajson()
+#    for i in nn(message_dt(gr='ПО-1', load_file=data['sso'])):
+#        print(i)
