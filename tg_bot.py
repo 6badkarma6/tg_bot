@@ -50,4 +50,8 @@ def adm(message):
                          protect_content=True, disable_notification=True)
 
 
-bot.polling(none_stop=True, timeout=10000)
+print('bot start')
+try:
+    bot.polling(none_stop=True, timeout=10000)
+finally:
+    print('bot finish')
