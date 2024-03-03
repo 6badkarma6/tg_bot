@@ -159,7 +159,7 @@ def ls(a: int, r: int, x: int = 3, y: int = 7) -> tuple[list[str], list[str]]:
 
 
 def data_conf():
-    with open('data.json', 'w') as file:
+    with open('data.json', 'w', encoding='utf-8') as file:
         import json
         data = ajson()
         sn = sort(data['sso'])

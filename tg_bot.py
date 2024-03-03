@@ -1,4 +1,3 @@
-#!/usr/bin
 import telebot
 from telebot import types
 
@@ -46,4 +45,10 @@ def gr2(message):
     bot.send_message(message.from_user.id, rw(gr='ЭС-2'))
 
 
-bot.polling(none_stop=True, timeout=10000)
+#@bot.message_handler(commands=['adm'])
+#def adm(message):
+#    if message.from_user.id == 'a':
+#        pass
+
+
+bot.polling(none_stop=True)  #, timeout=10000)
