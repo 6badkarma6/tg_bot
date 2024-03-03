@@ -115,16 +115,16 @@ def sort(file: str):
     open_file = file.active
     sn = {}
     j = 2
-    while True:
+    while range(100000):
         r = 5
         r += j
-        if open_file.cell(row=r, column=3).value == ' ':
+        if open_file.cell(row=r, column=3).value == '' or open_file.cell(row=r, column=3).value == ' ':
             j += 1
             sn['y'] = j
             break
         j += 2
     o = 1
-    while True:
+    while range(10000):
         ln = 3
         ln += o
         if open_file.cell(row=4, column=ln).value != 'None':
