@@ -1,13 +1,15 @@
+"""Модули для бота"""
+
+
 def rw(gr: str):
-    #if local == 'local':
-    #    data = ajson(file='data-tw.json')
-    #    return message(data[gr])
-    #else:
-        data = ajson()
-        return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
+    """Вывод строки с рассписанием группы"""
+    data = ajson()
+    return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
 
 
+# Фильтр
 def nn(lists: list) -> list:
+    """Фильтрует от пустых строк и добавляет недостоющие"""
     for j in range(len(lists)):
         for k in range(len(lists[j])):
             if lists[j][k] == 'None' and j != 3:
@@ -19,7 +21,9 @@ def nn(lists: list) -> list:
     return lists
 
 
+# Форматирует список в текст
 def message(data: list) -> str:
+    """Преобразует список в текст"""
     ms = ''
     for j in data:
         for w in j:
@@ -27,7 +31,9 @@ def message(data: list) -> str:
     return ms
 
 
+# Формирует список
 def message_dt(gr: str, load_file: str, file: str = 'data.json') -> list:
+    """Формирует список из .xlsx файла по конфигурации data.json"""
     import openpyxl
     wb = openpyxl.load_workbook(load_file)
     sh = wb.active
@@ -51,13 +57,17 @@ def message_dt(gr: str, load_file: str, file: str = 'data.json') -> list:
     return message_data
 
 
+# Сохраняет HTML формат страницы
 def src():
+    """Сохраняет исходный код страницы"""
     import os
     os.system("curl -o page_source.html https://vgke.by/raspisanie-zanjatij/")
     return True
 
 
+# Достаёт из исходного кода нужные ссылки и названия
 def pr():
+    """Достаёт из исходного кода нужные ссылки и названия"""
     from bs4 import BeautifulSoup
     import json
     with open(file='page_source.html', mode='r', encoding='utf-8') as html:
@@ -91,7 +101,9 @@ def pr():
         return True
 
 
+# Сохраняет файл
 def save(pb=False):
+    """Сохраняет файл"""
     import os
     if pb:
         pr()
@@ -102,14 +114,18 @@ def save(pb=False):
     print('...finish')
 
 
+# Импортирует данные файла conf.json
 def ajson(file: str = 'conf.json'):
+    """Импортирует данные"""
     import json
     with open(file, 'r') as file:
         date = json.load(file)
     return date
 
 
+# Сортирует exel файл
 def sort(file: str):
+    """Сортирует exel файл"""
     import openpyxl
     file = openpyxl.load_workbook(file)
     open_file = file.active
@@ -142,6 +158,7 @@ def sort(file: str):
     return sn
 
 
+# Состовляет столбцы и строки
 def ls(a: int, r: int, x: int = 3, y: int = 7) -> tuple[list[str], list[str]]:
     abc = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
            'V', 'W', 'X', 'Y', 'Z']
@@ -157,6 +174,7 @@ def ls(a: int, r: int, x: int = 3, y: int = 7) -> tuple[list[str], list[str]]:
     return column, row
 
 
+# Формирует конфигурационный файл data.json
 def data_conf():
     with open('data.json', 'w', encoding='utf-8') as file:
         import json
@@ -172,6 +190,7 @@ def data_conf():
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 
+# Считывет токин бота
 def data() -> str:
     with open('bot', 'r') as data_bot:
         return data_bot.read()
