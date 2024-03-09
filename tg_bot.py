@@ -1,9 +1,9 @@
 import telebot
 from telebot import types
+from exel import rw, data
 
-from exel import rw
 
-bot = telebot.TeleBot('6788562469:AAFvF-l8F9cJrUJeYSyCsLdnPR7TbyyqbS8')
+bot = telebot.TeleBot(data())
 
 
 @bot.message_handler(commands=['start'])

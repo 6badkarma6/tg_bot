@@ -173,7 +173,6 @@ def data_conf():
                    'ЭС-2': {'x': es_x, 'y': es_y}}, file)
 
 
-# if __name__ == "__main__":
-#    data = ajson()
-#    for i in nn(message_dt(gr='ПО-1', load_file=data['sso'])):
-#        print(i)
+def data() -> str:
+    with open('bot', 'r') as data_bot:
+        return data_bot.read()
