@@ -119,7 +119,6 @@ def sort(file: str):
         r = 4
         r += j
         if open_file.cell(row=r, column=3).value == '' or open_file.cell(row=r, column=3).value == ' ':
-            j += 1
             sn['y'] = j
             break
         j += 1
@@ -128,7 +127,6 @@ def sort(file: str):
         ln = 3
         ln += o
         if open_file.cell(row=4, column=ln).value != 'None':
-            o += 1
             sn['x'] = o
             break
         o += 1
