@@ -127,6 +127,7 @@ def sort(file: str):
         ln = 3
         ln += o
         if open_file.cell(row=4, column=ln).value != 'None':
+            o += 1
             sn['x'] = o
             break
         o += 1
