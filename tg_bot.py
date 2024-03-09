@@ -16,7 +16,7 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("Расписание ПО-1", callback_data='study-po-1'))
     markup.add(types.InlineKeyboardButton("Расписание ЭС-2", callback_data='study-es-2'))
-    bot.send_message(message.from_user.id, ' Bot v0.2b \n Работает с 15:00 по 21:00', reply_markup=markup)
+    bot.send_message(message.from_user.id, ' Bot v0.3b \n Работает с 15:00 по 21:00', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda callback: True)
