@@ -190,6 +190,3 @@ def data_conf():
 def data() -> str:
     with open('bot', 'r') as data_bot:
         return data_bot.read()
-
-
-print(rw("ПО-1"))
