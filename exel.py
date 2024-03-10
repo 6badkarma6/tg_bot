@@ -24,11 +24,7 @@ def nn(lists: list) -> list:
 # Форматирует список в текст
 def message(data: list) -> str:
     """Преобразует список в текст"""
-    ms = ''
-    for j in data:
-        for w in j:
-            ms = ms + w
-    return ms
+    return ''.join([''.join(dt) for dt in data])
 
 
 # Формирует список
@@ -194,3 +190,6 @@ def data_conf():
 def data() -> str:
     with open('bot', 'r') as data_bot:
         return data_bot.read()
+
+
+print(rw("ПО-1"))
