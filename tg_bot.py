@@ -13,7 +13,8 @@ finally:
 # Взятие токена и его инициализация
 bot = telebot.TeleBot(data())
 user = Users()
-ids = user.post_ids()
+user.read_user()
+ids = user.post_user()
 
 
 @bot.message_handler(commands=['start'])
@@ -116,27 +117,53 @@ def gr(message):
 def adm(message):
     """Админ панель для тестов"""
     if message.chat.id == 1474943294:
-        markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton("Расписание ПО-1", callback_data='study-po-1'))
+        # markup = types.InlineKeyboardMarkup()
+        # markup.add(types.InlineKeyboardButton("Расписание ПО-1", callback_data='study-po-1'))
         bot.send_message(message.from_user.id, message,
-                         reply_markup=markup,
+                         # reply_markup=markup,
                          protect_content=True,
                          disable_notification=True)
 
 
 @bot.message_handler(commands=['post'])
 def post(message):
-    """
+    """ """
     if message.chat.id == 1474943294:
+        print('post')
         for user_id in ids:
-            bot.send_message(user_id, message,
+            bot.send_message(int(user_id), rw("ПО-1"),
                              protect_content=True,
-                             disable_notification=True)"""
-    pass
+                             disable_notification=True)
 
 
-print('bot start')
+@bot.message_handler(commands=['add_user'])
+def add_user(message):
+    """ """
+    if message.chat.id not in ids:
+        print('add_user')
+        group = message.text.split(':')
+        user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1])
+        bot.send_message(message.chat.id,
+                         f"Добавлен пользователь {message.from_user.first_name} с id {message.from_user.id}",
+                         protect_content=True,
+                         disable_notification=True)
+
+
+@bot.message_handler(commands=['del_user'])
+def del_user(message):
+    """ """
+    if message.chat.id == 1474943294:
+        print('del_user')
+        ids = message.text.split(':')
+        user.del_user(user_id=ids)
+        bot.send_message(message.chat.id,
+                         f"пользователь с id {ids} удалён",
+                         protect_content=True,
+                         disable_notification=True)
+
+
 try:
+    print('bot start')
     bot.polling(none_stop=True, timeout=10000)
 finally:
     print('bot finish')

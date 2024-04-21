@@ -254,44 +254,38 @@ def info(message, name):
     print(name.from_user.id)
 
 
-def bol_user(user_id: int) -> bool:
-    with open('user_id.txt', mode='r', encoding='utf-8') as file:
-        ids = str(file.read())
-        print(ids)
-        ids = ids.split('\n')
-        print(ids)
-    if str(user_id) in ids:
-        return True
-    print(type(user_id), user_id)
-    return False
-
-
 class Users:
     def __init__(self):
-        self.ids = []
+        self.db = None
 
-    def read_user_id(self):
-        with open("user_id", mode='r') as file:
-            lists = file.read()
-            strings: list[str] = lists.split(" ")
-            for strs in strings:
-                if strs == "":
-                    continue
-                self.ids.append(int(strs))
+    def read_user(self):
+        db = {}
+        import shelve as sh
+        with sh.open("user\\user_id", flag='r') as file:
+            for i in file:
+                db[i] = file[i]
+        self.db = db
 
-    def check_id(self, user_id: int) -> bool:
-        if user_id in self.ids:
+    def check_id(self, user_id: str) -> bool:
+        if user_id in self.db:
             return True
         else:
             return False
 
     @staticmethod
-    def add_user_id(user_id: int):
-        with open("user_id", mode='a') as file:
-            file.write(f'{user_id} ')
+    def add_user(user_id: str, first_name: str, group: str):
+        import shelve as sh
+        with sh.open("user\\user_id", flag='c') as file:
+            file[user_id] = [first_name, group]
 
-    def post_ids(self):
-        return self.ids
+    @staticmethod
+    def del_user(user_id: str):
+        import shelve as sh
+        with sh.open("user\\user_id", flag='c') as file:
+            del file[user_id]
+
+    def post_user(self):
+        return self.db
 
 # if __name__ == "__main__":
 # import json
