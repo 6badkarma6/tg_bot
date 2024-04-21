@@ -242,7 +242,8 @@ def data_conf():
 
 # Считывет токин бота
 def data() -> str:
-    with open('bot', 'r') as data_bot:
+    # with open('bot', 'r') as data_bot:
+    with open('badwr', 'r') as data_bot:
         return data_bot.read(46)
 
 
@@ -267,17 +268,16 @@ def bol_user(user_id: int) -> bool:
 
 class Users:
     def __init__(self):
-        self.ids = None
+        self.ids = []
 
     def read_user_id(self):
-        with open("", mode='r') as file:
+        with open("user_id", mode='r') as file:
             lists = file.read()
             strings: list[str] = lists.split(" ")
             for strs in strings:
                 if strs == "":
                     continue
-                strs = int(strs)
-                self.ids.append(strs)
+                self.ids.append(int(strs))
 
     def check_id(self, user_id: int) -> bool:
         if user_id in self.ids:
@@ -287,8 +287,11 @@ class Users:
 
     @staticmethod
     def add_user_id(user_id: int):
-        with open("", mode='a') as file:
+        with open("user_id", mode='a') as file:
             file.write(f'{user_id} ')
+
+    def post_ids(self):
+        return self.ids
 
 # if __name__ == "__main__":
 # import json

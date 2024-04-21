@@ -12,6 +12,8 @@ finally:
 
 # Взятие токена и его инициализация
 bot = telebot.TeleBot(data())
+user = Users()
+ids = user.post_ids()
 
 
 @bot.message_handler(commands=['start'])
@@ -29,7 +31,7 @@ def start(message):
                          protect_content=True,
                          disable_notification=True)
     except BaseException:
-        print('exept')
+        print('except')
 
 
 # Отвечает на callback.data
@@ -44,7 +46,7 @@ def study(callback):
                              protect_content=True,
                              disable_notification=True)
         except BaseException:
-            print('exept')
+            print('except')
     if callback.data == 'study-es-2':
         print('User in callback es-2: ', end='')
         info(callback.message, callback)
@@ -53,12 +55,12 @@ def study(callback):
                              protect_content=True,
                              disable_notification=True)
         except BaseException:
-            print('exept')
+            print('except')
 
 
 # Выводит рассписание группы номер 1
 @bot.message_handler(commands=['list'])
-def list(message):
+def lists(message):
     """Рассписание группы номер 1"""
     print('User in list: ', end='')
     info(message, message)
@@ -68,27 +70,26 @@ def list(message):
                          protect_content=True,
                          disable_notification=True)
     except BaseException:
-        print('exept')
-
+        print('[!] except')
 
 
 @bot.message_handler(commands=['help'])
-def help(message):
+def helps(message):
     """Рассписание группы номер 2"""
     print('User in help: ', end='')
     info(message, message)
     doc = """
-    * для начало работы и сброса пред настрое бота ввежите '/start'
+    * для начала работы и сброса преднастроек бота введите '/start'
     * для вывода списка доступных групп введите '/list'
     * для вывода раписания для доступных группы введите '/gr -*-'
     -*- — группа из списка групп
 """
     try:
-         bot.send_message(message.from_user.id, doc,
-                          protect_content=True,
-                          disable_notification=True)
+        bot.send_message(message.from_user.id, doc,
+                         protect_content=True,
+                         disable_notification=True)
     except BaseException:
-         print('exept')
+        print('[!] except')
 
 
 @bot.message_handler(commands=['gr'])
@@ -108,7 +109,7 @@ def gr(message):
                          protect_content=True,
                          disable_notification=True)
     except BaseException:
-        print('exept')
+        print('[!] except')
 
 
 @bot.message_handler(commands=['adm'])
@@ -121,6 +122,17 @@ def adm(message):
                          reply_markup=markup,
                          protect_content=True,
                          disable_notification=True)
+
+
+@bot.message_handler(commands=['post'])
+def post(message):
+    """
+    if message.chat.id == 1474943294:
+        for user_id in ids:
+            bot.send_message(user_id, message,
+                             protect_content=True,
+                             disable_notification=True)"""
+    pass
 
 
 print('bot start')
