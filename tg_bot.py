@@ -103,7 +103,7 @@ def gr(message):
     info(message, message)
     text = message.text.split(' ')
     if len(text) == 1:
-       bot.send_message(message.from_user.id, 'Не правильно введена команда',
+        bot.send_message(message.from_user.id, 'Не правильно введена команда',
                          protect_content=True,
                          disable_notification=True)
     try:
@@ -153,19 +153,19 @@ def add_user(message):
         print('add_user')
         group = message.text.split(' ')
         try:
-              user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1].upper())
-              bot.send_message(message.chat.id,
-                         f"Добавлен пользователь {message.from_user.first_name} с id {message.from_user.id}",
-                         protect_content=True,
-                         disable_notification=True)
-              user.read_user()
-              ids = user.post_user()
+            user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1].upper())
+            bot.send_message(message.chat.id,
+                             f"Добавлен пользователь {message.from_user.first_name} с id {message.from_user.id}",
+                             protect_content=True,
+                             disable_notification=True)
+            user.read_user()
+            ids = user.post_user()
         except BaseException:
-              print('[!] except')
-              bot.send_message(message.chat.id,
-                         'Команда введена неправильно',
-                         protect_content=True,
-                         disable_notification=True)
+            print('[!] except')
+            bot.send_message(message.chat.id,
+                             'Команда введена неправильно',
+                             protect_content=True,
+                             disable_notification=True)
 
 
 @bot.message_handler(commands=['del_user'])
@@ -175,15 +175,15 @@ def del_user(message):
         print('del_user')
         user_id = message.text.split(' ')
         try:
-             user.del_user(user_id=user_id[1])
-             bot.send_message(message.chat.id,
-                         f"пользователь с id {user_id} удалён",
-                         protect_content=True,
-                         disable_notification=True)
-             user.read_user()
-             ids = user.post_user()
+            user.del_user(user_id=user_id[1])
+            bot.send_message(message.chat.id,
+                             f"пользователь с id {user_id} удалён",
+                             protect_content=True,
+                             disable_notification=True)
+            user.read_user()
+            ids = user.post_user()
         except BaseException:
-             print('[!] except')
+            print('[!] except')
 
 
 @bot.message_handler(commands=['show_user'])
@@ -192,12 +192,12 @@ def show_user(message):
     if message.chat.id == 1474943294:
         print('show_users : ', ids)
         try:
-             bot.send_message(message.chat.id,
-                         f"show_user : {ids}",
-                         protect_content=True,
-                         disable_notification=True)
+            bot.send_message(message.chat.id,
+                             f"show_user : {ids}",
+                             protect_content=True,
+                             disable_notification=True)
         except BaseException:
-             print('[!] except')
+            print('[!] except')
 
 
 @bot.message_handler(commands=['adm_add'])
@@ -207,26 +207,25 @@ def adm_add(message):
         print('adm_add')
         ids = message.text.split(' ')
         if len(ids) == 1:
-               try:
-                     bot.send_message(message.chat.id,
-                         '[!] except',
-                         protect_content=True,
-                         disable_notification=True)
-               except BaseException:
-                     print('[!] except')
+            try:
+                bot.send_message(message.chat.id,
+                                 '[!] except',
+                                 protect_content=True,
+                                 disable_notification=True)
+            except BaseException:
+                print('[!] except')
         try:
-               id = ids[1].split(',')
-               user.add_user(user_id=id[0], first_name=id[1], group=id[2])
-               user.read_user()
-               bot.send_message(message.chat.id,
-                         str(user.post_user()),
-                         protect_content=True,
-                         disable_notification=True)
-               user.read_user()
-               ids = user.post_user()
+            id = ids[1].split(',')
+            user.add_user(user_id=id[0], first_name=id[1], group=id[2])
+            user.read_user()
+            bot.send_message(message.chat.id,
+                             str(user.post_user()),
+                             protect_content=True,
+                             disable_notification=True)
+            user.read_user()
+            ids = user.post_user()
         except BaseException:
-               print('[!] except')
-
+            print('[!] except')
 
 
 @bot.message_handler(commands=['adm_mes'])
@@ -236,26 +235,29 @@ def adm_mes(message):
         print('adm_mes')
         data = message.text.split(' ')
         if len(data) == 1:
-               try:
-                     bot.send_message(message.chat.id,
-                         '[!] except',
-                         protect_content=True,
-                         disable_notification=True)
-               except BaseException:
-                     print('[!] except')
+            try:
+                bot.send_message(message.chat.id,
+                                 '[!] except',
+                                 protect_content=True,
+                                 disable_notification=True)
+            except BaseException:
+                print('[!] except')
         try:
-               id = int(data[1].split('#')[0]); print(id)
-               mes = " ".join((data[1].split('#')[1]).split('-')); print(mes)
-               bot.send_message(id,
-                         mes,
-                         protect_content=True,
-                         disable_notification=True)
-               bot.send_message(message.chat.id,
-                         "succes",
-                         protect_content=True,
-                         disable_notification=True)
+            id = int(data[1].split('#')[0])
+            print(id)
+            mes = " ".join((data[1].split('#')[1]).split('-'))
+            print(mes)
+            bot.send_message(id,
+                             mes,
+                             protect_content=True,
+                             disable_notification=True)
+            bot.send_message(message.chat.id,
+                             "succes",
+                             protect_content=True,
+                             disable_notification=True)
         except BaseException:
-               print('[!] except')
+            print('[!] except')
+
 
 try:
     print('bot start')

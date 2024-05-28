@@ -1,34 +1,24 @@
 """Модули для бота"""
 
 
-def lon(data) -> str:
-    string = ' Список групп: '
-    for i in range(len(data)):
-        string = string + data[i] + ' '
-    return string
-
-
 def rw(group: str) -> str:
     """Вывод строки с рассписанием группы"""
-    # data = ajson()
-    # return message(nn(lists=message_dt(gr=gr, load_file=data['sso'])))
     groups = ajson("timetable.json")
     return groups[group]
 
 
 def time_grs():
     import json
-    time = {}
-    data = ajson()
-    list_grs = ajson('bin.json')
-    list_grs = list_grs['grs']
-    for i in list_grs:
-        print(type(i), i)
-        time[i] = message(nn(lists=message_dt(gr=i, load_file=data['sso'][0])))
-    print(time)
+    list_grs = (ajson('bin.json'))['grs']
+    time = dict(map(strings, list_grs))
     with open('timetable.json', 'w') as file:
         json.dump(time, file, indent=2)
     return True
+
+
+def strings(i):
+    data = ajson()['sso']
+    return i, message(nn(lists=message_dt(gr=i, load_file=data[0])))
 
 
 # Фильтр
@@ -130,13 +120,13 @@ def save(pb=False):
 def ajson(file: str = 'conf.json'):
     """Импортирует данные"""
     import json
-    with open(file, 'r') as file:
+    with open(file, 'r', encoding="utf-8") as file:
          data = json.load(file)
     return data
 
 
 # Сортирует exel файл
-def search(file: str, gr: str):
+def search(file: str, gr: str) -> tuple[int, int]:
     """Сортирует exel файл"""
     import openpyxl
     workbook = openpyxl.load_workbook(file)
@@ -147,30 +137,20 @@ def search(file: str, gr: str):
                 return gr_x, gr_y
 
 
-def filters(file: str, gr_x: int, gr_y: int, gr: str):
-    # data = ajson('bin.json')
+def filters(file: str, gr_x: int, gr_y: int):
     import openpyxl
     workbook = openpyxl.load_workbook(file)
     open_file = workbook.active
     x = gr_x
-    # print(x, end=' ')
     y = 3
-    # print(y)
     for i in range(14):
         x += 1
         if str(open_file.cell(row=x, column=y).value) == '' or str(open_file.cell(row=x, column=y).value) == ' ':
-            # print('break', x, open_file.cell(row=x, column=y).value)
             x -= 1
-            # if gr == 'ЭС-2':
-              #   x -= 1
-            # break
-        # print(x, open_file.cell(row=x, column=y).value)
     for i in range(4):
         if str(open_file.cell(row=gr_x, column=y).value) == 'None':
-            # print('break')
             break
         y += 1
-        # print(y, open_file.cell(row=x, column=gr_y).value)
     if str(open_file.cell(row=gr_x, column=g(1, gr_y)).value) == 'None' \
             and str(open_file.cell(row=gr_x, column=g(3, gr_y)).value) == 'None':
         gr_y += 3
@@ -221,7 +201,7 @@ def data_conf():
         for gr in grs:
             print("start ", gr)
             gr_x, gr_y1 = search(file, gr)
-            x, y, gr_y2 = filters(file, gr_x, gr_y1, gr)
+            x, y, gr_y2 = filters(file, gr_x, gr_y1)
             column, row = ls(gr_x=gr_x, gr_y1=gr_y1, x=x, y=y, gr_y2=gr_y2)
             dt = dict(x=column, y=row)
             print(dt, end='\n\n')
@@ -281,17 +261,21 @@ class Users:
     def post_user(self):
         return self.db
 
+
 # if __name__ == "__main__":
-# import json
-# file = "den-sso-1.xlsx"
-# gr = str(input('>>'))
-# gr_x, gr_y1 = search(file, gr)
-# x, y, gr_y2 = filter(file, gr_x, gr_y1, gr)
-# print([gr_x, 3, x, y], [gr_x, gr_y1, x, gr_y2])
-# column, row = ls(gr_x=gr_x, gr_y1=gr_y1, x=x, y=y, gr_y2=gr_y2)
-# print(column, row)
-# data_conf()
-# print(rw('ПО-1'))
-# print(user(1234))
-# inp = int(input('>>'))
-# print(user(inp))
+    # import json
+    # file = "den-sso-1.xlsx"
+    # gr = str(input('>>'))
+    # gr_x, gr_y1 = search(file, gr)
+    # x, y, gr_y2 = filter(file, gr_x, gr_y1, gr)
+    # print([gr_x, 3, x, y], [gr_x, gr_y1, x, gr_y2])
+    # column, row = ls(gr_x=gr_x, gr_y1=gr_y1, x=x, y=y, gr_y2=gr_y2)
+    # print(column, row)
+    # src()
+    # pr()
+    # save()
+    # data_conf()
+    # print(rw('ПО-1'))
+    # print(user(1234))
+    # inp = int(input('>>'))
+    # print(user(inp))
