@@ -225,7 +225,7 @@ def data(i: bool = True) -> str:
         with open('tokens/bot', 'r') as data_bot:
             return data_bot.read(46)
     else:
-        with open('tokens/badwr', 'r') as data_bot:
+        with open('badwr', 'r') as data_bot:
             return data_bot.read(46)
 
 

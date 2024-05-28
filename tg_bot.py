@@ -7,19 +7,25 @@ try:
     import logging.config
     from telebot import types
     from exel import rw, data, info, ajson, lon, Users
+    import datetime
 except Exception as error:
     raise error
 finally:
     print("Функции успешно импортированны")
 
-logging.config.fileConfig('logging.conf')
-logger = logging.getLogger('simpleExample')
+logger = logging.getLogger('')
+logging.basicConfig(filename='log.txt',
+                    encoding="utf-8",
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S')
 
 # Взятие токена и его инициализация
-bot = telebot.TeleBot(data())
+bot = telebot.TeleBot(data(False))
 user = Users()
 user.read_user()
 ids = user.post_user()
+
 
 
 @bot.message_handler(commands=['start'])
@@ -265,9 +271,11 @@ def adm_mes(message):
 
 
 try:
-    print('bot start')
+    logger.info('[*]bot start[*]')
+    print('Бот включен')
     bot.polling(none_stop=True, timeout=10000)
 except ConnectionError as er:
-    print(er)
+    print('Connection error')
 finally:
-    print('bot finish')
+    print('Бот выключен')
+    logger.info('[*]bot stop[*]')
