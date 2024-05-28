@@ -3,12 +3,17 @@
 # Проверка на наличие библиотек
 try:
     import telebot
+    import logging
+    import logging.config
     from telebot import types
     from exel import rw, data, info, ajson, lon, Users
 except Exception as error:
     raise error
 finally:
     print("Функции успешно импортированны")
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('simpleExample')
 
 # Взятие токена и его инициализация
 bot = telebot.TeleBot(data())

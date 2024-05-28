@@ -1,4 +1,12 @@
 """Модули для бота"""
+# import logger as log
+
+
+def lon(data) -> str:
+    string = 'Список групп'
+    for i in range(len(data)):
+        string = string + data[i] + " "
+    return string
 
 
 def rw(group: str) -> str:
