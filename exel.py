@@ -24,7 +24,7 @@ def time_grs():
     list_grs = list_grs['grs']
     for i in list_grs:
         print(type(i), i)
-        time[i] = message(nn(lists=message_dt(gr=i, load_file=data['sso'])))
+        time[i] = message(nn(lists=message_dt(gr=i, load_file=data['sso'][0])))
     print(time)
     with open('timetable.json', 'w') as file:
         json.dump(time, file, indent=2)
@@ -91,33 +91,24 @@ def pr():
     with open(file='page_source.html', mode='r', encoding='utf-8') as html:
         print('pr start')
         soup = BeautifulSoup(html, 'html.parser')
-        data = []
         http = []
-        name = []
+        names = []
+        sso = []
+        http_sso = []
         for link in soup.find_all('iframe'):
-            data.append(link.get('src'))
-        for j in range(len(data)):
-            ds = j
-            http.append(data[ds][51:])
-            if data[ds][-17] == '/':
-                name.append(data[ds][-16:])
-            elif data[ds][-13] == '/':
-                name.append(data[ds][-12:])
-            elif data[ds][-15] == '/':
-                name.append(data[ds][-14:])
-            else:
-                name.append(data[ds][-15:])
-            if name[ds][:7] == 'den-sso':
-                sso = str(data[ds][-12:])
-                http_sso = str(data[ds][51:])
-            if name[ds][:7] == 'den-sso' and name[ds][7] == '-':
-                sso = str(data[ds][-14:])
-                http_sso = str(data[ds][51:])
+            strings = (link.get('src').split('='))[1]
+            http.append(strings)
+            name = (strings.split('/'))[-1]
+            names.append(name)
+            if 'den-sso' in name:
+                http_sso.append(strings)
+                sso.append(name)
+            print(http, '\n', http_sso, '\n', names, '\n', sso)
         print('pr finish')
         with open('conf.json', 'w') as write_file:
             json.dump({'http': http,
                        'http_sso': http_sso,
-                       'name': name,
+                       'names': names,
                        'sso': sso}, write_file, indent=2)
         return True
 
@@ -131,7 +122,7 @@ def save(pb=False):
         print('pr True')
     print('start...')
     data = ajson()
-    os.system("curl -O " + data['http_sso'])
+    os.system("curl -O " + data['http_sso'][0])
     print('...finish')
 
 
@@ -140,7 +131,7 @@ def ajson(file: str = 'conf.json'):
     """Импортирует данные"""
     import json
     with open(file, 'r') as file:
-        data = json.load(file)
+         data = json.load(file)
     return data
 
 
@@ -170,9 +161,9 @@ def filters(file: str, gr_x: int, gr_y: int, gr: str):
         if str(open_file.cell(row=x, column=y).value) == '' or str(open_file.cell(row=x, column=y).value) == ' ':
             # print('break', x, open_file.cell(row=x, column=y).value)
             x -= 1
-            if gr == 'ЭС-2':
-                x -= 1
-            break
+            # if gr == 'ЭС-2':
+              #   x -= 1
+            # break
         # print(x, open_file.cell(row=x, column=y).value)
     for i in range(4):
         if str(open_file.cell(row=gr_x, column=y).value) == 'None':
@@ -224,7 +215,7 @@ def data_conf():
     conf = ajson()
     binarn = ajson('bin.json')
     grs = binarn['grs']
-    file = conf['sso']
+    file = conf['sso'][0]
     with open(file='data.json', mode='w', encoding='utf-8') as dump_file:
         dump = {}
         for gr in grs:
@@ -241,10 +232,13 @@ def data_conf():
 
 
 # Считывет токин бота
-def data() -> str:
-    # with open('bot', 'r') as data_bot:
-    with open('badwr', 'r') as data_bot:
-        return data_bot.read(46)
+def data(i: bool = True) -> str:
+    if i:
+        with open('tokens/bot', 'r') as data_bot:
+            return data_bot.read(46)
+    else:
+        with open('tokens/badwr', 'r') as data_bot:
+            return data_bot.read(46)
 
 
 def info(message, name):
@@ -261,7 +255,7 @@ class Users:
     def read_user(self):
         db = {}
         import shelve as sh
-        with sh.open("user\\user_id", flag='r') as file:
+        with sh.open("user/user_id", flag='r') as file:
             for i in file:
                 db[i] = file[i]
         self.db = db
@@ -275,13 +269,13 @@ class Users:
     @staticmethod
     def add_user(user_id: str, first_name: str, group: str):
         import shelve as sh
-        with sh.open("user\\user_id", flag='c') as file:
+        with sh.open("user/user_id", flag='c') as file:
             file[user_id] = [first_name, group]
 
     @staticmethod
     def del_user(user_id: str):
         import shelve as sh
-        with sh.open("user\\user_id", flag='c') as file:
+        with sh.open("user/user_id", flag='c') as file:
             del file[user_id]
 
     def post_user(self):

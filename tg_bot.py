@@ -26,9 +26,10 @@ def start(message):
     c2 = types.BotCommand(command='gr', description='Print time for group')
     c3 = types.BotCommand(command='list', description='Return list of group')
     c4 = types.BotCommand(command='help', description='Return help doc')
-    bot.set_my_commands([c1, c2, c3, c4])
+    c5 = types.BotCommand(command='add_user', description='auto notification')
+    bot.set_my_commands([c1, c2, c3, c4, c5])
     try:
-        bot.send_message(message.from_user.id, ' Bot v1 \n  работает',
+        bot.send_message(message.from_user.id, ' Bot v1 \n  работает с 16:40 по 21:00 ',
                          protect_content=True,
                          disable_notification=True)
     except BaseException:
@@ -84,6 +85,8 @@ def helps(message):
     * для вывода списка доступных групп введите '/list'
     * для вывода раписания для доступных группы введите '/gr -*-'
     -*- — группа из списка групп
+    *
+    *для включения авто уведомления введите '/add_user -*-'
 """
     try:
         bot.send_message(message.from_user.id, doc,
@@ -127,43 +130,137 @@ def adm(message):
 
 @bot.message_handler(commands=['post'])
 def post(message):
-    """ """
+    """ post"""
     if message.chat.id == 1474943294:
         print('post')
         for user_id in ids:
-            bot.send_message(int(user_id), rw("ПО-1"),
+            name, group = ids[user_id]
+            bot.send_message(int(user_id), rw(group),
                              protect_content=True,
                              disable_notification=True)
 
 
 @bot.message_handler(commands=['add_user'])
 def add_user(message):
-    """ """
-    if message.chat.id not in ids:
-        print('add_user')
-        group = message.text.split(':')
-        user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1])
+    """ add"""
+    global ids
+    if str(message.chat.id) in ids:
         bot.send_message(message.chat.id,
+                         'user уже зарегестрирован',
+                         protect_content=True,
+                         disable_notification=True)
+    else:
+        print('add_user')
+        group = message.text.split(' ')
+        try:
+              user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1].upper())
+              bot.send_message(message.chat.id,
                          f"Добавлен пользователь {message.from_user.first_name} с id {message.from_user.id}",
+                         protect_content=True,
+                         disable_notification=True)
+              user.read_user()
+              ids = user.post_user()
+        except BaseException:
+              print('[!] except')
+              bot.send_message(message.chat.id,
+                         'Команда введена неправильно',
                          protect_content=True,
                          disable_notification=True)
 
 
 @bot.message_handler(commands=['del_user'])
 def del_user(message):
-    """ """
+    """ del"""
     if message.chat.id == 1474943294:
         print('del_user')
-        ids = message.text.split(':')
-        user.del_user(user_id=ids)
-        bot.send_message(message.chat.id,
-                         f"пользователь с id {ids} удалён",
+        user_id = message.text.split(' ')
+        try:
+             user.del_user(user_id=user_id[1])
+             bot.send_message(message.chat.id,
+                         f"пользователь с id {user_id} удалён",
                          protect_content=True,
                          disable_notification=True)
+             user.read_user()
+             ids = user.post_user()
+        except BaseException:
+             print('[!] except')
 
+
+@bot.message_handler(commands=['show_user'])
+def show_user(message):
+    """ show"""
+    if message.chat.id == 1474943294:
+        print('show_users : ', ids)
+        try:
+             bot.send_message(message.chat.id,
+                         f"show_user : {ids}",
+                         protect_content=True,
+                         disable_notification=True)
+        except BaseException:
+             print('[!] except')
+
+
+@bot.message_handler(commands=['adm_add'])
+def adm_add(message):
+    """ adm add"""
+    if message.chat.id == 1474943294:
+        print('adm_add')
+        ids = message.text.split(' ')
+        if len(ids) == 1:
+               try:
+                     bot.send_message(message.chat.id,
+                         '[!] except',
+                         protect_content=True,
+                         disable_notification=True)
+               except BaseException:
+                     print('[!] except')
+        try:
+               id = ids[1].split(',')
+               user.add_user(user_id=id[0], first_name=id[1], group=id[2])
+               user.read_user()
+               bot.send_message(message.chat.id,
+                         str(user.post_user()),
+                         protect_content=True,
+                         disable_notification=True)
+               user.read_user()
+               ids = user.post_user()
+        except BaseException:
+               print('[!] except')
+
+
+
+@bot.message_handler(commands=['adm_mes'])
+def adm_mes(message):
+    """ adm add"""
+    if message.chat.id == 1474943294:
+        print('adm_mes')
+        data = message.text.split(' ')
+        if len(data) == 1:
+               try:
+                     bot.send_message(message.chat.id,
+                         '[!] except',
+                         protect_content=True,
+                         disable_notification=True)
+               except BaseException:
+                     print('[!] except')
+        try:
+               id = int(data[1].split('#')[0]); print(id)
+               mes = " ".join((data[1].split('#')[1]).split('-')); print(mes)
+               bot.send_message(id,
+                         mes,
+                         protect_content=True,
+                         disable_notification=True)
+               bot.send_message(message.chat.id,
+                         "succes",
+                         protect_content=True,
+                         disable_notification=True)
+        except BaseException:
+               print('[!] except')
 
 try:
     print('bot start')
     bot.polling(none_stop=True, timeout=10000)
+except ConnectionError as er:
+    print(er)
 finally:
     print('bot finish')
