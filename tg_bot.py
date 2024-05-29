@@ -21,7 +21,7 @@ logging.basicConfig(filename='log.txt',
                     datefmt='%m/%d/%Y %I:%M:%S')
 
 # Взятие токена и его инициализация
-bot = telebot.TeleBot(data(False))
+bot = telebot.TeleBot(data())
 user = Users()
 user.read_user()
 ids = user.post_user()
