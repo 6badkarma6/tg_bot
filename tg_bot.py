@@ -6,7 +6,7 @@ try:
     import logging
     import logging.config
     from telebot import types
-    from exel import Modules as Modules, Users
+    from exel import Modules, Users
     import datetime
 except Exception as error:
     raise error
