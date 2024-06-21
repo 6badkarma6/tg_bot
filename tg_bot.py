@@ -16,9 +16,9 @@ finally:
 logger = logging.getLogger('')
 logging.basicConfig(filename='log.txt',
                     encoding="utf-8",
-                    level=logging.DEBUG,
-                    format='%(asctime)s %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S')
+                    level=logging.INFO,
+                    format='%(asctime)s  %(message)s ',
+                    datefmt='%m/%d/%Y %H:%M:%S')
 
 # Взятие токена и его инициализация
 bot = telebot.TeleBot(data())
@@ -31,8 +31,8 @@ ids = user.post_user()
 @bot.message_handler(commands=['start'])
 def start(message):
     """Функция настройки бота при его старте"""
-    print('User ', end=' ')
-    info(message, message)
+    logger.info('User with id {0} press start in {1}[#]'.format(message.from_user.id,
+                                                             info(message, message)))
     c1 = types.BotCommand(command='start', description='Start the Bot')
     c2 = types.BotCommand(command='gr', description='Print time for group')
     c3 = types.BotCommand(command='list', description='Return list of group')
@@ -52,7 +52,7 @@ def start(message):
 def study(callback):
     """Отвечает на InLineKeyboardButton"""
     if callback.data == 'study-po-1':
-        print('User in callback po-1: ', end='')
+        print('User po-1', end='')
         info(callback.message, callback)
         try:
             bot.send_message(callback.from_user.id, rw(group='ПО-1'),
@@ -75,8 +75,8 @@ def study(callback):
 @bot.message_handler(commands=['list'])
 def lists(message):
     """Рассписание группы номер 1"""
-    print('User in list: ', end='')
-    info(message, message)
+    logger.info('[#]User with id {0} press list in {1}[#]'.format(message.from_user.id,
+                                                             info(message, message)))
     data = ajson('bin.json')
     try:
         bot.send_message(message.from_user.id, lon(data['grs']),
@@ -89,8 +89,8 @@ def lists(message):
 @bot.message_handler(commands=['help'])
 def helps(message):
     """Рассписание группы номер 2"""
-    print('User in help: ', end='')
-    info(message, message)
+    logger.info('[#]User with id {0} press help in {1}[#]'.format(message.from_user.id,
+                                                             info(message, message)))
     doc = """
     * для начала работы и сброса преднастроек бота введите '/start'
     * для вывода списка доступных групп введите '/list'
@@ -110,8 +110,8 @@ def helps(message):
 @bot.message_handler(commands=['gr'])
 def gr(message):
     """Рассписание групп"""
-    print('User in gr: ', end='')
-    info(message, message)
+    logger.info('[#]User with id {0} press gr in {1}[#]'.format(message.from_user.id,
+                                                             info(message, message)))
     text = message.text.split(' ')
     if len(text) == 1:
         bot.send_message(message.from_user.id, 'Не правильно введена команда',
@@ -142,18 +142,21 @@ def adm(message):
 @bot.message_handler(commands=['post'])
 def post(message):
     """ post"""
+    logger.info('[@] POST [@]')
     if message.chat.id == 1474943294:
         print('post')
         for user_id in ids:
             name, group = ids[user_id]
             bot.send_message(int(user_id), rw(group),
-                             protect_content=True,
-                             disable_notification=True)
+                             protect_content=False,
+                             disable_notification=False)
 
 
 @bot.message_handler(commands=['add_user'])
 def add_user(message):
     """ add"""
+    logger.info('[#]User with id {0} press add_user in {1}[#]'.format(message.from_user.id,
+                                                             info(message, message)))
     global ids
     if str(message.chat.id) in ids:
         bot.send_message(message.chat.id,
@@ -161,7 +164,6 @@ def add_user(message):
                          protect_content=True,
                          disable_notification=True)
     else:
-        print('add_user')
         group = message.text.split(' ')
         try:
             user.add_user(user_id=str(message.chat.id), first_name=message.from_user.first_name, group=group[1].upper())
@@ -200,6 +202,7 @@ def del_user(message):
 @bot.message_handler(commands=['show_user'])
 def show_user(message):
     """ show"""
+    logger.info('[@] LIST USERS [@]')
     if message.chat.id == 1474943294:
         print('show_users : ', ids)
         try:

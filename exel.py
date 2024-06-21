@@ -82,10 +82,12 @@ def src():
 
 
 # Достаёт из исходного кода нужные ссылки и названия
-def pr():
+def pr(bol: bool = False):
     """Достаёт из исходного кода нужные ссылки и названия"""
     from bs4 import BeautifulSoup
     import json
+    if bol == True:
+         src()
     with open(file='page_source.html', mode='r', encoding='utf-8') as html:
         print('pr start')
         soup = BeautifulSoup(html, 'html.parser')
@@ -231,9 +233,9 @@ def data(i: bool = True) -> str:
 
 def info(message, name):
     import datetime
-    print(datetime.datetime.fromtimestamp(message.date), end=': ')
-    print(name.from_user.first_name, end=' ')
-    print(name.from_user.id)
+    return str(datetime.datetime.fromtimestamp(message.date))  + ": "\
+            + str(name.from_user.first_name) + " "\
+            + str(name.from_user.id)
 
 
 class Users:
@@ -270,7 +272,7 @@ class Users:
         return self.db
 
 
-# if __name__ == "__main__":
+#if __name__ == "__main__":
     # import json
     # file = "den-sso-1.xlsx"
     # gr = str(input('>>'))
@@ -279,10 +281,10 @@ class Users:
     # print([gr_x, 3, x, y], [gr_x, gr_y1, x, gr_y2])
     # column, row = ls(gr_x=gr_x, gr_y1=gr_y1, x=x, y=y, gr_y2=gr_y2)
     # print(column, row)
-    # src()
-    # pr()
-    # save()
-    # data_conf()
+    #src()
+    #pr()
+    #save()
+    #data_conf()
     # print(rw('ПО-1'))
     # print(user(1234))
     # inp = int(input('>>'))
