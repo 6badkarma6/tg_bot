@@ -6,7 +6,7 @@ try:
     import logging
     import logging.config
     from telebot import types
-    from exel import rw, data, info, ajson, lon, Users
+    from exel import Modules as Modules, Users
     import datetime
 except Exception as error:
     raise error
@@ -21,18 +21,17 @@ logging.basicConfig(filename='log.txt',
                     datefmt='%m/%d/%Y %H:%M:%S')
 
 # Взятие токена и его инициализация
-bot = telebot.TeleBot(data())
+bot = telebot.TeleBot(Modules.data())
 user = Users()
 user.read_user()
 ids = user.post_user()
-
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
     """Функция настройки бота при его старте"""
     logger.info('User with id {0} press start in {1}[#]'.format(message.from_user.id,
-                                                             info(message, message)))
+                                                                Modules.info(message, message)))
     c1 = types.BotCommand(command='start', description='Start the Bot')
     c2 = types.BotCommand(command='gr', description='Print time for group')
     c3 = types.BotCommand(command='list', description='Return list of group')
@@ -43,32 +42,10 @@ def start(message):
         bot.send_message(message.from_user.id, ' Bot v1 \n  работает с 16:40 по 21:00 ',
                          protect_content=True,
                          disable_notification=True)
-    except BaseException:
+    except ConnectionError:
         print('except')
-
-
-# Отвечает на callback.data
-@bot.callback_query_handler(func=lambda callback: True)
-def study(callback):
-    """Отвечает на InLineKeyboardButton"""
-    if callback.data == 'study-po-1':
-        print('User po-1', end='')
-        info(callback.message, callback)
-        try:
-            bot.send_message(callback.from_user.id, rw(group='ПО-1'),
-                             protect_content=True,
-                             disable_notification=True)
-        except BaseException:
-            print('except')
-    if callback.data == 'study-es-2':
-        print('User in callback es-2: ', end='')
-        info(callback.message, callback)
-        try:
-            bot.send_message(callback.from_user.id, rw(group='ЭС-2'),
-                             protect_content=True,
-                             disable_notification=True)
-        except BaseException:
-            print('except')
+    else:
+        print("Just start error")
 
 
 # Выводит рассписание группы номер 1
@@ -76,21 +53,23 @@ def study(callback):
 def lists(message):
     """Рассписание группы номер 1"""
     logger.info('[#]User with id {0} press list in {1}[#]'.format(message.from_user.id,
-                                                             info(message, message)))
-    data = ajson('bin.json')
+                                                                  Modules.info(message, message)))
+    data = Modules.ajson(file="bin.json")
     try:
-        bot.send_message(message.from_user.id, lon(data['grs']),
+        bot.send_message(message.from_user.id, Modules.lon(data['grs']),
                          protect_content=True,
                          disable_notification=True)
-    except BaseException:
+    except ConnectionError:
         print('[!] except')
+    else:
+        print("Just list error")
 
 
 @bot.message_handler(commands=['help'])
 def helps(message):
     """Рассписание группы номер 2"""
     logger.info('[#]User with id {0} press help in {1}[#]'.format(message.from_user.id,
-                                                             info(message, message)))
+                                                                  Modules.info(message, message)))
     doc = """
     * для начала работы и сброса преднастроек бота введите '/start'
     * для вывода списка доступных групп введите '/list'
@@ -103,15 +82,17 @@ def helps(message):
         bot.send_message(message.from_user.id, doc,
                          protect_content=True,
                          disable_notification=True)
-    except BaseException:
+    except ConnectionError:
         print('[!] except')
+    else:
+        print("Just help error")
 
 
 @bot.message_handler(commands=['gr'])
 def gr(message):
     """Рассписание групп"""
     logger.info('[#]User with id {0} press gr in {1}[#]'.format(message.from_user.id,
-                                                             info(message, message)))
+                                                                Modules.info(message, message)))
     text = message.text.split(' ')
     if len(text) == 1:
         bot.send_message(message.from_user.id, 'Не правильно введена команда',
@@ -120,11 +101,13 @@ def gr(message):
     try:
         group = text[1].upper()
         print(group)
-        bot.send_message(message.from_user.id, rw(group=group),
+        bot.send_message(message.from_user.id, Modules.rw(group=group),
                          protect_content=True,
                          disable_notification=True)
-    except BaseException:
+    except ConnectionError:
         print('[!] except')
+    else:
+        print("Just gr error")
 
 
 @bot.message_handler(commands=['adm'])
@@ -147,8 +130,7 @@ def post(message):
         print('post')
         for user_id in ids:
             name, group = ids[user_id]
-            bot.send_message(int(user_id), rw(group),
-                             protect_content=False,
+            bot.send_message(int(user_id), Modules.rw(group), protect_content=False,
                              disable_notification=False)
 
 
@@ -156,7 +138,7 @@ def post(message):
 def add_user(message):
     """ add"""
     logger.info('[#]User with id {0} press add_user in {1}[#]'.format(message.from_user.id,
-                                                             info(message, message)))
+                                                                      Modules.info(message, message)))
     global ids
     if str(message.chat.id) in ids:
         bot.send_message(message.chat.id,
@@ -173,12 +155,14 @@ def add_user(message):
                              disable_notification=True)
             user.read_user()
             ids = user.post_user()
-        except BaseException:
+        except ConnectionError:
             print('[!] except')
             bot.send_message(message.chat.id,
                              'Команда введена неправильно',
                              protect_content=True,
                              disable_notification=True)
+        else:
+            print("Just notification error")
 
 
 @bot.message_handler(commands=['del_user'])
@@ -194,9 +178,11 @@ def del_user(message):
                              protect_content=True,
                              disable_notification=True)
             user.read_user()
-            ids = user.post_user()
-        except BaseException:
+            # ids = user.post_user()
+        except ConnectionError:
             print('[!] except')
+        else:
+            print("Just del user error")
 
 
 @bot.message_handler(commands=['show_user'])
@@ -210,8 +196,10 @@ def show_user(message):
                              f"show_user : {ids}",
                              protect_content=True,
                              disable_notification=True)
-        except BaseException:
+        except ConnectionError:
             print('[!] except')
+        else:
+            print("Just show user error")
 
 
 @bot.message_handler(commands=['adm_add'])
@@ -226,8 +214,11 @@ def adm_add(message):
                                  '[!] except',
                                  protect_content=True,
                                  disable_notification=True)
-            except BaseException:
+            except ConnectionError:
                 print('[!] except')
+
+            else:
+                print("Just adm_add.except error")
         try:
             id = ids[1].split(',')
             user.add_user(user_id=id[0], first_name=id[1], group=id[2])
@@ -237,9 +228,11 @@ def adm_add(message):
                              protect_content=True,
                              disable_notification=True)
             user.read_user()
-            ids = user.post_user()
-        except BaseException:
+            # ids = user.post_user()
+        except ConnectionError:
             print('[!] except')
+        else:
+            print("Just add_users error")
 
 
 @bot.message_handler(commands=['adm_mes'])
@@ -254,8 +247,10 @@ def adm_mes(message):
                                  '[!] except',
                                  protect_content=True,
                                  disable_notification=True)
-            except BaseException:
+            except ConnectionError:
                 print('[!] except')
+            else:
+                print("Just add_mes.except error")
         try:
             id = int(data[1].split('#')[0])
             print(id)
@@ -269,16 +264,19 @@ def adm_mes(message):
                              "succes",
                              protect_content=True,
                              disable_notification=True)
-        except BaseException:
+        except ConnectionError:
             print('[!] except')
+        else:
+            print("Just add_mes error")
 
 
-try:
-    logger.info('[*]bot start[*]')
-    print('Бот включен')
-    bot.polling(none_stop=True, timeout=10000)
-except ConnectionError as er:
-    print('Connection error')
-finally:
-    print('Бот выключен')
-    logger.info('[*]bot stop[*]')
+if __name__ == "__main__":
+    try:
+        logger.info('[*]bot start[*]')
+        print('Бот включен')
+        bot.polling(none_stop=True, timeout=10000)
+    except ConnectionError as er:
+        print('Connection error')
+    finally:
+        print('Бот выключен')
+        logger.info('[*]bot stop[*]')
